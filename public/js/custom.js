@@ -2,6 +2,13 @@
     "use strict";
 	
 	/* ..............................................
+	register 
+	................................................. */
+	document.getElementById('myRegister').onchange = function() {
+		window.location.href = this.children[this.selectedIndex].getAttribute('value');
+	}
+
+	/* ..............................................
 	   Loader 
 	   ................................................. */
 	$(window).on('load', function() {
