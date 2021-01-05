@@ -22,6 +22,8 @@ mongoose.connect(process.env.DB_CONNECT,{useNewUrlParser: true, useUnifiedTopolo
 app.set('view engine','ejs');
 app.use(expressEjsLayout);
 
+app.use(express.static(__dirname + '/public')); // setup static directory 
+
 ///// BodyParser /////
 app.use(express.urlencoded({extended : false}));
 

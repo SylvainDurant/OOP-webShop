@@ -2,9 +2,9 @@ const express = require('express');
 const router  = express.Router();
 const {ensureAuthenticated} = require("../config/403.js")
 
-//login page
+//index page
 router.get('/', (req,res)=>{
-    res.render('welcome');
+    res.render('index');
 })
 
 //register page
