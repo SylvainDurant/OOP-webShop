@@ -7,12 +7,14 @@ const expressEjsLayout = require('express-ejs-layouts');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+const dotenv = require("dotenv");
 
 require("./config/passport")(passport)
 
+dotenv.config();
+
 ///// mongoose /////
-const newLocal = 'mongodb+srv://New_User:Fubukiki02@cluster0.tab6t.mongodb.net/OOP_db?retryWrites=true&w=majority';
-mongoose.connect(newLocal,{useNewUrlParser: true, useUnifiedTopology : true})
+mongoose.connect(process.env.DB_CONNECT,{useNewUrlParser: true, useUnifiedTopology : true})
 .then(() => console.log('connected to DB'))
 .catch((err)=> console.log(err));
 
