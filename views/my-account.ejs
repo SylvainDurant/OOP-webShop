@@ -19,6 +19,9 @@
 <div class="my-account-box-main">
     <div class="title-all text-center mt-3 text-decoration-underline">
         <h1>Welcome <%= user.name %></h1>
+        <% if(user.admin){ %>
+            <img src="/images/admin.jpg" alt="admin">
+        <% } %> 
     </div>
     <div class="container">
         <div class="my-account-page">
