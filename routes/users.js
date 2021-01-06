@@ -4,22 +4,28 @@ const bcrypt = require('bcrypt');
 const User = require("../models/user.js");
 const passport = require('passport');
 
-//login handle
+//login path
 router.get('/login',(req,res)=>{
-    res.render('login');
+    res.render('login',{
+        user: req.user,
+        page: ''
+    });
 })
 router.get('/register',(req,res)=>{
-    res.render('register')
+    res.render('register',{
+        user: req.user,
+        page: ''
+    });
 })
 
 //Register handle
 router.post('/register',(req,res)=>{
-    const {name,email, password, password2} = req.body;
+    const {name,lastName,email, password, password2} = req.body;
     let errors = [];
+    console.log(req.body);
+    console.log('First Name: ' + name+ ' Last Name: '+ lastName+ ' email: ' + email+ ' pass: ' + password);
 
-    console.log('Name: ' + name+ ' email: ' + email+ ' pass: ' + password);
-
-    if(!name || !email || !password || !password2) {
+    if(!name || !lastName || !email || !password || !password2) {
         errors.push({msg : "Please, fill in all fields"})
     }
 
@@ -37,6 +43,7 @@ router.post('/register',(req,res)=>{
         res.render('register', {
             errors : errors,
             name : name,
+            lastName : lastName,
             email : email,
             password : password,
             password2 : password2
@@ -52,6 +59,7 @@ router.post('/register',(req,res)=>{
             } else {
                 const newUser = new User({
                     name : name,
+                    lastName : lastName,
                     email : email,
                     password : password
                 });
@@ -74,9 +82,11 @@ router.post('/register',(req,res)=>{
         })
     }
 })
+
+//sign in
 router.post('/login',(req,res,next)=>{
     passport.authenticate('local',{
-        successRedirect : '/dashboard',
+        successRedirect : '/my-account',
         failureRedirect : '/users/login',
         failureFlash : true,
     })(req,res,next);

@@ -1,8 +1,0 @@
-<h1>Dashboard</h1>
-
-<% if (!user){ %>
-    <p>Please, <a href="/users/login">sign in</a>.</p>
-<% } else { %> 
-    <p>Welcome <%= user.name %></p>
-    <a href="/users/logout"> Logout</a>
-<% } %> 

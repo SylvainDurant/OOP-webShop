@@ -22,12 +22,22 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="login-box">
-                    <select id="myRegister" class="selectpicker show-tick form-control" data-placeholder="Sign In">
-                        <option style="display: none;">Register | Sign In</option>
-                        <option value="/register">Register</option>
-                        <option>Sign In</option>
-                    </select>
+                    <% if (!user){ %>
+                        <select id="myRegister" class="selectpicker show-tick form-control" data-placeholder="Sign In">
+                            <option style="display: none;">Register | Sign In</option>
+                            <option value="/register">Register</option>
+                            <option value="/users/login">Sign In</option>
+                        </select>
+                    <% } else { %> 
+                        <select id="myRegister" class="selectpicker show-tick form-control" data-placeholder="Sign In">
+                            <option style="display: none;">Hello <%= user.name %></option>
+                            <option value="/my-account">My Account</option>
+                            <option value="/cart">My Cart</option>
+                            <option value="/users/logout">Sign Out</option>
+                        </select>
+                    <% } %> 
                 </div>
+
                 <div class="text-slid-box">
                     <div id="offer-box" class="carouselTicker">
                         <ul class="offer-box">
