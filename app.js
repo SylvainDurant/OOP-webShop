@@ -23,6 +23,7 @@ app.set('view engine','ejs');
 app.use(expressEjsLayout);
 
 app.use(express.static(__dirname + '/public')); // setup static directory 
+app.use(express.json());       // to support JSON-encoded bodies
 
 ///// BodyParser /////
 app.use(express.urlencoded({extended : false}));

@@ -82,6 +82,35 @@ router.get('/wishlist', (req,res)=>{
     });
 })
 
+//email page
+router.get('/email', ensureAuthenticated,(req,res)=>{
+    res.render('email',{
+        user: req.user,
+        page: ''
+    });
+})
+
+//password page
+router.get('/password',(req,res)=>{
+    res.render('password',{
+        user: req.user,
+        page: ''
+    });
+})
+
+//checkMail page
+router.get('/checkMail',(req,res)=>{
+    console.log(req.body);
+    if (!req.body.email){
+        res.redirect('/');
+    } else {
+        res.render('checkMail',{
+            user: req.user,
+            page: ''
+        });
+    }
+})
+
 //////////////////////////////////////////////////////////////////////////////
 
 //register page
