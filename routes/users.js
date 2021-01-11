@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require("../models/user.js");
+const mongoose = require('mongoose');
 const passport = require('passport');
+const dbUser = require("../models/user");
+
+mongoose.set('useFindAndModify', false);
 
 //login path
 router.get('/login',(req,res)=>{
@@ -82,6 +86,93 @@ router.post('/register',(req,res)=>{
         })
     }
 })
+
+//Change Email
+router.post('/email',(req,res)=>{
+    let user = req.user;
+    const {email, checkPassword} = req.body;
+    let errors = [];
+    // console.log(user);
+    // console.log(req.body);
+    // console.log('New email: ' + email+ ' pass: ' + checkPassword);
+
+    if(!email || !checkPassword) {
+        errors.push({msg : "Please, fill in all fields"})
+    } else {
+        bcrypt.compare(checkPassword, user.password, function(err, result) {
+            // console.log(result);
+            if(result === false){
+                errors.push({msg : "Wrong Password"})
+            } else {
+                User.findOne({email : email}).exec((err,result)=>{
+                    // console.log(result);   
+                    if(result) {
+                        errors.push({msg: 'email already registered'});
+                        res.render('email', {
+                            user : user,
+                            errors : errors,
+                            page : ''
+                        })
+                    } else { // change the mail
+                        // user.email = email
+                        // console.log(user);
+                        const id = user._id;
+                        dbUser.findByIdAndUpdate(id, { email: email }, err => { // update the user's email
+                            if (err) return res.send(500, err);
+                            user.email = email;
+                            res.redirect('/my-account');
+                        });
+                    }
+                })
+            }
+    
+            if(errors.length > 0 ) {
+                res.render('email', {
+                    user : user,
+                    errors : errors,
+                    email : email,
+                    page : ''
+                })
+            }
+        });
+    }
+
+    if(errors.length > 0 ) {
+        res.render('email', {
+            user : User,
+            errors : errors,
+            email : email,
+            page : ''
+        })
+    }
+})
+
+//Change Password
+router.post('/password',(req,res)=>{
+    console.log(req.body);
+    const {email} = req.body;
+    let errors = [];
+
+    if(!email) {
+        errors.push({msg : "Please, enter your email"})
+    }    
+
+    if(errors.length > 0 ) {
+        res.render('password', {
+            user : req.user,
+            page : '',
+            errors : errors,
+            email : email
+        })
+    } else { //validation passed
+        res.render('checkMail', {
+            email : email,
+            user : req.user,
+            page : ''
+        });
+    } 
+
+});
 
 //sign in
 router.post('/login',(req,res,next)=>{
