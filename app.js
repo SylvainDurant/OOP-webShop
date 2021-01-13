@@ -9,12 +9,16 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const dotenv = require("dotenv");
 
+
 require("./config/passport")(passport)
 
 dotenv.config();
 
 ///// mongoose /////
-mongoose.connect(process.env.DB_CONNECT,{useNewUrlParser: true, useUnifiedTopology : true})
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useUnifiedTopology', true);
+mongoose.set('useCreateIndex', true);
+mongoose.connect(process.env.DB_CONNECT)
 .then(() => console.log('connected to DB'))
 .catch((err)=> console.log(err));
 
@@ -50,5 +54,6 @@ app.use((req,res,next)=> {
 ///// Routes /////
 app.use('/',require('./routes/index'));
 app.use('/users',require('./routes/users'));
+app.use('/admin',require('./routes/admin'));
 
 app.listen(port, () => console.log(`Server's up on port ${port}!`))

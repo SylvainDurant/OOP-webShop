@@ -5,28 +5,42 @@ const User = require("../models/user.js");
 const mongoose = require('mongoose');
 const passport = require('passport');
 const dbUser = require("../models/user");
+const { doesNotMatch } = require('assert');
+const {ensureAuthenticated} = require("../config/403.js")
 
 mongoose.set('useFindAndModify', false);
 
-//login path
+///// get path /////
 router.get('/login',(req,res)=>{
     res.render('login',{
         user: req.user,
-        page: ''
-    });
-})
-router.get('/register',(req,res)=>{
-    res.render('register',{
-        user: req.user,
-        page: ''
     });
 })
 
-//Register handle
+router.get('/register',(req,res)=>{
+    res.render('register',{
+        user: req.user,
+    });
+})
+
+router.get('/logout',(req,res)=>{
+    req.logout();
+    req.flash('success_msg','You are logged out');
+    res.redirect('/users/login');
+})
+
+router.get('/email', ensureAuthenticated,(req,res)=>{
+    res.render('email',{
+        user: req.user,
+    });
+})
+
+///// post path /////
+//Register
 router.post('/register',(req,res)=>{
     const {name,lastName,email, password, password2} = req.body;
     let errors = [];
-    console.log(req.body);
+    // console.log(req.body);
     console.log('First Name: ' + name+ ' Last Name: '+ lastName+ ' email: ' + email+ ' pass: ' + password);
 
     if(!name || !lastName || !email || !password || !password2) {
@@ -147,33 +161,6 @@ router.post('/email',(req,res)=>{
     }
 })
 
-//Change Password
-router.post('/password',(req,res)=>{
-    console.log(req.body);
-    const {email} = req.body;
-    let errors = [];
-
-    if(!email) {
-        errors.push({msg : "Please, enter your email"})
-    }    
-
-    if(errors.length > 0 ) {
-        res.render('password', {
-            user : req.user,
-            page : '',
-            errors : errors,
-            email : email
-        })
-    } else { //validation passed
-        res.render('checkMail', {
-            email : email,
-            user : req.user,
-            page : ''
-        });
-    } 
-
-});
-
 //sign in
 router.post('/login',(req,res,next)=>{
     passport.authenticate('local',{
@@ -181,13 +168,6 @@ router.post('/login',(req,res,next)=>{
         failureRedirect : '/users/login',
         failureFlash : true,
     })(req,res,next);
-})
-
-//logout
-router.get('/logout',(req,res)=>{
-    req.logout();
-    req.flash('success_msg','You are logged out');
-    res.redirect('/users/login');
 })
 
 module.exports  = router;

@@ -22,13 +22,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="login-box">
-                    <% if (!user){ %>
-                        <select id="myRegister" class="selectpicker show-tick form-control" data-placeholder="Sign In">
-                            <option style="display: none;">Register | Sign In</option>
-                            <option value="/register">Register</option>
-                            <option value="/users/login">Sign In</option>
-                        </select>
-                    <% } else { %> 
+                    <% if (typeof user != 'undefined'){ %>
                         <select id="myRegister" class="selectpicker show-tick form-control" data-placeholder="Sign In">
                             <option style="display: none;">Hello <%= user.name %></option>
                             <option value="/my-account">My Account</option>
@@ -36,6 +30,12 @@
                             <option value="/email">Change Email</option>
                             <option value="/password">Change Password</option>
                             <option value="/users/logout">Sign Out</option>
+                        </select>
+                    <% } else { %> 
+                        <select id="myRegister" class="selectpicker show-tick form-control" data-placeholder="Sign In">
+                            <option style="display: none;">Register | Sign In</option>
+                            <option value="/register">Register</option>
+                            <option value="/users/login">Sign In</option>
                         </select>
                     <% } %> 
                 </div>

@@ -1,2 +1,5 @@
 
 /** ADD YOUR AWESOME CODES HERE **/
+.myLine{
+    text-decoration: line-through !important;
+}
