@@ -15,9 +15,9 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbar-menu">
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp"> 
-                        <li class="nav-item <% if (page === 'home') {%>active<%} %>"><a class="nav-link" href="/">Home</a></li>
-                        <li class="nav-item <% if (page === 'about') {%>active<%} %>"><a class="nav-link" href="/about">About Us</a></li>
-                        <li class="dropdown <% if (page === 'shop') {%>active<%} %>">
+                        <li class="nav-item <% if ((typeof user != 'undefined') && (page === 'home')) {%>active<%} %>"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item <% if ((typeof user != 'undefined') && (page === 'about')) {%>active<%} %>"><a class="nav-link" href="/about">About Us</a></li>
+                        <li class="dropdown <% if ((typeof user != 'undefined') && (page === 'shop')) {%>active<%} %>">
                             <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">SHOP</a>
                             <ul class="dropdown-menu">
 								<li><a href="/shop">Sidebar Shop</a></li>
@@ -28,8 +28,8 @@
                                 <li><a href="/wishlist">Wishlist</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item <% if (page === 'gallery') {%>active<%} %>"><a class="nav-link" href="/gallery">Gallery</a></li>
-                        <li class="nav-item <% if (page === 'contact') {%>active<%} %>"><a class="nav-link" href="/contact-us">Contact Us</a></li>
+                        <li class="nav-item <% if ((typeof user != 'undefined') && (page === 'gallery')) {%>active<%} %>"><a class="nav-link" href="/gallery">Gallery</a></li>
+                        <li class="nav-item <% if ((typeof user != 'undefined') && (page === 'contact')) {%>active<%} %>"><a class="nav-link" href="/contact-us">Contact Us</a></li>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
