@@ -237,11 +237,8 @@ router.post('/resetPassword/:token',(req,res)=>{
                 dbUser.findByIdAndUpdate(id, { password: hashedPassword }, err => { // change the user's password
                     if (err) return res.send(500, err);
                     user.password = hashedPassword;
-                    // req.flash('success_msg','Your password has been reset.')
-                    res.render('login',{
-                        success_msg:['Your password has been reset.'],
-                        email: result.email
-                    });
+                    req.flash('success_msg','Your password has been reset.')
+                    res.redirect('/users/login');
                 });
             });
         }));
