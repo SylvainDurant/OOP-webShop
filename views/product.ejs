@@ -32,9 +32,9 @@
                                 </td>
                                 <td class="price-pr">
                                     <% if (product.discount) { %>
-                                        <p><span class="myLine">$ 80.0</span> / $ 60.0</p> 
+                                        <p><span class="myLine">$ <%= product.price %> </span> / $ <%= (product.price)/1.25 %></p> 
                                     <% } else { %>
-                                        <p>$ 80.0</p>
+                                        <p>$ <%= product.price %></p>
                                     <% } %> 
                                 </td>
                                 <td class="name-pr">
@@ -50,9 +50,34 @@
                                     </a>
                                 </td>
                                 <td class="remove-pr">
-                                    <a href="#">
-                                        <i class="fas fa-times"></i>
+
+                                    <!-- Button trigger modal -->
+                                    <a class="btn" data-toggle="modal" data-target="#exampleModalCenter<%= product._id %> ">
+                                        <i class="fas fa-trash-alt"></i>
                                     </a>
+                                    
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalCenter<%= product._id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header myModalTitle">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Warning</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete <%= product.name %> from your in sale products? 
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="/admin/delete/<%= product._id %>" method="post">
+                                                        <button type="submit" class="btn hvr-hover">Yes</button>
+                                                    </form>
+                                                    <button type="button" class="btn hvr-hover" data-dismiss="modal">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
     
@@ -70,7 +95,7 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <div>
-                        <label for="name" class="mb-0">Name of the Product</label>
+                        <label for="name" class="mb-0">Name of the Product:</label>
                         <input
                         class="form-control"
                         type="name"
@@ -81,18 +106,28 @@
                     </div>
 
                     <div>
-                        <label for="img" class="mb-0">Path to the image</label>
+                        <label for="img" class="mb-0">Path to the image:</label>
                         <input
                         class="form-control"
                         type="text"
                         name="img"
-                        value="/images/"
+                        value="<%= typeof img != 'undefined' ? img : "/images/products/" %>"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="price" class="mb-0">Price:</label>
+                        <input
+                        class="form-control"
+                        type="number"
+                        name="price"
+                        value="<%= typeof price != 'undefined' ? price : '' %>"
                         />
                     </div>
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label for="category" class="mb-0">category of the Product</label><br>
+                    <label for="category" class="mb-0">category of the Product:</label><br>
                     <input type="radio" name="category" value="fruit"/>
                     <label>Fruits & Drinks</label><br>
                     <input type="radio" name="category" value="vegetable"/>
@@ -102,7 +137,7 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label for="password" class="mb-0">Your Password</label>
+                    <label for="password" class="mb-0">Your Password:</label>
                     <input
                     class="form-control"
                     type="password"

@@ -592,7 +592,7 @@
 }
  .arrow::before{
      font-family: 'FontAwesome';
-     content: "\f0d7";
+     content: "\f0d7"; 
      margin-left: 5px;
      margin-top: 2px;
      border: none;

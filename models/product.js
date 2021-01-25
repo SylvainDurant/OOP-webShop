@@ -11,6 +11,11 @@ const ProductSchema  = new mongoose.Schema({
         required : true
     },
 
+    price :{
+        type  : Number,
+        required : true
+    },
+
     category :{
         type  : String,
         required : true
@@ -26,6 +31,15 @@ const ProductSchema  = new mongoose.Schema({
         default : Date.now
     },
 
+    quantity :{
+        type : Number,
+        required : true
+    },
+
+    sold :{
+        type : Number,
+        default : 0
+    }
 });
 
 module.exports = mongoose.model('Product',ProductSchema);
