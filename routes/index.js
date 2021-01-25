@@ -7,6 +7,8 @@ const crypto = require("crypto");
 const dbUser = require("../models/user");
 const user = require('../models/user.js');
 const bcrypt = require('bcrypt');
+const Product = require("../models/product");
+const product = require('../models/product');
 
 ///// GET Path /////
 //index page
@@ -67,17 +69,30 @@ router.get('/my-account', ensureAuthenticated,(req,res)=>{
 
 //shop page
 router.get('/shop', (req,res)=>{
-    res.render('shop',{
-        user: req.user,
-        page: 'shop'
+    Product.find().sort('name').exec((err,products)=>{
+
+        res.render('shop',{
+            products: products,
+            user: req.user,
+            page: 'shop'
+        });
     });
 })
 
-//shop-details page
-router.get('/shop-details', (req,res)=>{
-    res.render('shop-details',{
-        user: req.user,
-        page: 'shop'
+//shop-detail page
+router.get('/shop-detail/:id', (req,res)=>{
+    Product.findOne({ 
+        _id: req.params.id, // looking for the product 
+    }, (err, product) =>{
+        if (!product){
+            req.flash('error_msg', "this product does not exist.")
+            return res.redirect('/shop');
+        }
+        res.render('shop-detail',{
+            product: product,
+            user: req.user,
+            page: 'shop'
+        });
     });
 })
 
@@ -208,41 +223,39 @@ router.post('/resetPassword/:token',(req,res)=>{
     const token = req.params.token;
 
     if(!password || !password2) {
-        errors.push({msg : "Please, fill in all fields"})
+        req.flash('error_msg','Please, fill in all fields.')
+        return res.redirect(`/resetPassword/${token}`)
     }
 
     //check if match
     if(password !== password2) {
-        errors.push({msg : "passwords don't match"});
+        req.flash('error_msg',"passwords don't match.")
+        return res.redirect(`/resetPassword/${token}`)
     }
 
     //check if password is more than 6 characters
     if(password.length < 6 ) {
-        errors.push({msg : 'password must be at least 6 characters'})
+        req.flash('error_msg','password must be at least 6 characters.')
+        return res.redirect(`/resetPassword/${token}`)
     }
 
-    if(errors.length > 0 ) {
-        res.render('/resetPassword/'+token, {
-            errors : errors
-        })
-    } else { //validation passed
-        bcrypt.genSalt(10,(err,salt) => bcrypt.hash(password,salt,(err,hash)=> {
-            if(err) throw err;
-            
-            let hashedPassword = hash; //save pass to hash
+    //validation passed
+    bcrypt.genSalt(10,(err,salt) => bcrypt.hash(password,salt,(err,hash)=> {
+        if(err) throw err;
+        
+        let hashedPassword = hash; //save pass to hash
 
-            User.findOne({resetPasswordToken : token}).exec((err,result)=>{
-                const id = result._id;
-    
-                dbUser.findByIdAndUpdate(id, { password: hashedPassword }, err => { // change the user's password
-                    if (err) return res.send(500, err);
-                    user.password = hashedPassword;
-                    req.flash('success_msg','Your password has been reset.')
-                    res.redirect('/users/login');
-                });
+        User.findOne({resetPasswordToken : token}).exec((err,result)=>{
+            const id = result._id;
+
+            dbUser.findByIdAndUpdate(id, { password: hashedPassword }, err => { // change the user's password
+                if (err) return res.send(500, err);
+                user.password = hashedPassword;
+                req.flash('success_msg','Your password has been reset.')
+                res.redirect('/users/login');
             });
-        }));
-    }
+        });
+    }));
 });
 
 module.exports = router; 

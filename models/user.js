@@ -38,6 +38,10 @@ const UserSchema  = new mongoose.Schema({
 
     resetPasswordExpires :{
         type : Date
+    },
+
+    cart :{
+        type : Object
     }
 });
 

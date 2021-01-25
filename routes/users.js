@@ -14,12 +14,14 @@ mongoose.set('useFindAndModify', false);
 router.get('/login',(req,res)=>{
     res.render('login',{
         user: req.user,
+        page: ''
     });
 })
 
 router.get('/register',(req,res)=>{
     res.render('register',{
         user: req.user,
+        page: ''
     });
 })
 
@@ -90,8 +92,9 @@ router.post('/register',(req,res)=>{
                     newUser.save() //save user
 
                     .then((value) => {
-                        console.log(value)
-                        req.flash('success_msg','Registration successful!')
+                        // console.log(value)
+                        req.logout();
+                        req.flash('success_msg','Register Successful');
                         res.redirect('/users/login');
                     })
                     .catch(value => console.log(value));                      
@@ -160,6 +163,36 @@ router.post('/email',(req,res)=>{
         })
     }
 })
+
+//Delete Account
+router.post('/delete',(req,res)=>{
+    const {password} = req.body;
+    let errors = [];
+    
+    bcrypt.compare(password, req.user.password, function(err, result) {
+        // console.log(result);
+        if(result === false){
+            errors.push({msg : "Your account has NOT been deleted because you entered a wrong password."})
+        
+        } else { // delete Account
+            const id = req.user._id;
+            dbUser.findByIdAndDelete(id, err => { // update the user's email
+                if (err) return res.send(500, err);
+                req.logout();
+                req.flash('success_msg','Your Account has been deleted');
+                res.redirect('/users/login');
+            });
+        }
+
+        if(errors.length > 0 ) {
+            res.render('my-account', {
+                user : req.user,
+                errors : errors,
+                page : ''
+            })
+        }
+    });
+});
 
 //sign in
 router.post('/login',(req,res,next)=>{
