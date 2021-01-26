@@ -8,7 +8,6 @@ const dbUser = require("../models/user");
 const user = require('../models/user.js');
 const bcrypt = require('bcrypt');
 const Product = require("../models/product");
-const product = require('../models/product');
 
 ///// GET Path /////
 //index page
@@ -96,18 +95,11 @@ router.get('/shop-detail/:id', (req,res)=>{
     });
 })
 
-//wishlist page
-router.get('/wishlist', (req,res)=>{
-    res.render('wishlist',{
-        user: req.user,
-        page: 'shop'
-    });
-})
-
 //register page
 router.get('/register', (req,res)=>{
     res.render('register',{
         user: req.user,
+        page:''
     });
 })
 

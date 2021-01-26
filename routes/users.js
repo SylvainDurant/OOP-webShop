@@ -6,7 +6,9 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const dbUser = require("../models/user");
 const { doesNotMatch } = require('assert');
-const {ensureAuthenticated} = require("../config/403.js")
+const {ensureAuthenticated} = require("../config/403.js");
+const Product = require('../models/product.js');
+const { findOne } = require('../models/user.js');
 
 mongoose.set('useFindAndModify', false);
 
@@ -37,13 +39,22 @@ router.get('/email', ensureAuthenticated,(req,res)=>{
     });
 })
 
+router.get('/wishlist', ensureAuthenticated, (req,res)=>{
+    User.findOne({_id : req.user._id}).populate('wishlist').exec((err, user) => {
+        res.render('wishlist',{
+            user: user,
+            page: 'shop'
+        });
+    });
+})
+
 ///// post path /////
 //Register
 router.post('/register',(req,res)=>{
     const {name,lastName,email, password, password2} = req.body;
     let errors = [];
     // console.log(req.body);
-    console.log('First Name: ' + name+ ' Last Name: '+ lastName+ ' email: ' + email+ ' pass: ' + password);
+   // console.log('First Name: ' + name+ ' Last Name: '+ lastName+ ' email: ' + email+ ' pass: ' + password);
 
     if(!name || !lastName || !email || !password || !password2) {
         errors.push({msg : "Please, fill in all fields"})
@@ -70,7 +81,7 @@ router.post('/register',(req,res)=>{
         })
     } else { //validation passed
         User.findOne({email : email}).exec((err,user)=>{
-            console.log(user);   
+           // console.log(user);   
             if(user) {
                 errors.push({msg: 'email already registered'});
                 res.render('register', {
@@ -202,5 +213,30 @@ router.post('/login',(req,res,next)=>{
         failureFlash : true,
     })(req,res,next);
 })
+
+//add to wishlist
+router.post('/addWishlist/:_id',(req,res)=>{
+    const id = req.params._id;
+    let userId = req.user._id;
+
+    // Product.findOne({_id : id}).exec((err,product)=>{
+        let newWishlist = [id];
+
+        User.findOne({_id : userId}).exec((err,user)=>{
+
+            if (user.wishlist) {
+                user.wishlist.forEach(elem => {
+                    newWishlist.push(elem)    
+                });
+            }
+    
+            dbUser.findByIdAndUpdate(userId, { wishlist: newWishlist }, err => { // update the wishlist
+                if (err) return res.send(500, err);
+                req.user.wishlist = newWishlist;
+                res.redirect('/shop');
+            });
+        });
+    // });
+});
 
 module.exports  = router;
