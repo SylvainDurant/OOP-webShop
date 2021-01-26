@@ -1,4 +1,3 @@
-
 <!-- Start All Title Box -->
 <div class="all-title-box">
     <div class="container">
@@ -19,96 +18,74 @@
 <div class="wishlist-box-main">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="table-main table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Images</th>
-                                <th>Product Name</th>
-                                <th>Unit Price </th>
-                                <th>Stock</th>
-                                <th>Add Item</th>
-                                <th>Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="thumbnail-img">
-                                    <a href="#">
-                                <img class="img-fluid" src="images/img-pro-01.jpg" alt="" />
-                            </a>
-                                </td>
-                                <td class="name-pr">
-                                    <a href="#">
-                                Lorem ipsum dolor sit amet
-                            </a>
-                                </td>
-                                <td class="price-pr">
-                                    <p>$ 80.0</p>
-                                </td>
-                                <td class="quantity-box">In Stock</td>
-                                <td class="add-pr">
-                                    <a class="btn hvr-hover" href="#">Add to Cart</a>
-                                </td>
-                                <td class="remove-pr">
-                                    <a href="#">
-                                <i class="fas fa-times"></i>
-                            </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="thumbnail-img">
-                                    <a href="#">
-                                <img class="img-fluid" src="images/img-pro-02.jpg" alt="" />
-                            </a>
-                                </td>
-                                <td class="name-pr">
-                                    <a href="#">
-                                Lorem ipsum dolor sit amet
-                            </a>
-                                </td>
-                                <td class="price-pr">
-                                    <p>$ 60.0</p>
-                                </td>
-                                <td class="quantity-box">In Stock</td>
-                                <td class="add-pr">
-                                    <a class="btn hvr-hover" href="#">Add to Cart</a>
-                                </td>
-                                <td class="remove-pr">
-                                    <a href="#">
-                                <i class="fas fa-times"></i>
-                            </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="thumbnail-img">
-                                    <a href="#">
-                                <img class="img-fluid" src="images/img-pro-03.jpg" alt="" />
-                            </a>
-                                </td>
-                                <td class="name-pr">
-                                    <a href="#">
-                                Lorem ipsum dolor sit amet
-                            </a>
-                                </td>
-                                <td class="price-pr">
-                                    <p>$ 30.0</p>
-                                </td>
-                                <td class="quantity-box">In Stock</td>
-                                <td class="add-pr">
-                                    <a class="btn hvr-hover" href="#">Add to Cart</a>
-                                </td>
-                                <td class="remove-pr">
-                                    <a href="#">
-                                <i class="fas fa-times"></i>
-                            </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <% if ((user.wishlist != 'undefined') && (user.wishlist.length > 0)) { %>
+
+                <div class="col-lg-12">
+                    <div class="table-main table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Images</th>
+                                    <th>Product Name</th>
+                                    <th>Unit Price </th>
+                                    <th>Stock</th>
+                                    <th>Add Item</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <% user.wishlist.forEach(product => { %>
+                                    
+                                    <tr>
+                                        <td class="thumbnail-img">
+                                            <a href="/shop-detail/<%= product._id %>">
+                                                <img class="img-fluid" src="<%= product.img %>" alt="<%= product.name %>" />
+                                            </a>
+                                        </td>
+                                        <td class="name-pr">
+                                            <a href="/shop-detail/<%= product._id %>">
+                                                <%= product.name %>
+                                            </a>
+                                        </td>
+                                        <td class="price-pr">
+                                            <p>
+                                                <% if (product.discount) { %>
+                                                    <p><span class="myLine">$ <%= product.price %> </span> / $ <%= (product.price)/1.25 %></p> 
+                                                <% } else { %>
+                                                    <p>$ <%= product.price %></p>
+                                                <% } %>
+                                            </p>
+                                        </td>
+                                        <td class="quantity-box">
+                                            <% if (product.quantity > 0) { %>
+                                                In Stock
+                                            <% } else { %>
+                                                <span class="text-danger">Out of Stock</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="add-pr">
+                                            <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                        </td>
+                                        <td class="remove-pr">
+                                            <a href="#">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                        </td>
+                                    </tr>
+                                    
+                                <% }); %> 
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+
+            <% } else { %>
+                <div class="text-center">
+                    <p>Your wishlist is empty.</p>
+                </div>
+            <% } %> 
         </div>
     </div>
 </div>
