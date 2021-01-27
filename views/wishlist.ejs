@@ -68,9 +68,11 @@
                                             <a class="btn hvr-hover" href="#">Add to Cart</a>
                                         </td>
                                         <td class="remove-pr">
-                                            <a href="#">
-                                        <i class="fas fa-times"></i>
-                                    </a>
+                                            <form action="/users/removeWishlist/<%= product._id %>" method="post">
+                                                <a href="#" onclick="this.closest('form').submit();return false;">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            </form>
                                         </td>
                                     </tr>
                                     

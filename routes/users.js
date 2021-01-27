@@ -1,14 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const User = require("../models/user.js");
+const User = require("../models/user");
 const mongoose = require('mongoose');
 const passport = require('passport');
-const dbUser = require("../models/user");
-const { doesNotMatch } = require('assert');
 const {ensureAuthenticated} = require("../config/403.js");
-const Product = require('../models/product.js');
-const { findOne } = require('../models/user.js');
 
 mongoose.set('useFindAndModify', false);
 
@@ -145,7 +141,7 @@ router.post('/email',(req,res)=>{
                         // user.email = email
                         // console.log(user);
                         const id = user._id;
-                        dbUser.findByIdAndUpdate(id, { email: email }, err => { // update the user's email
+                        User.findByIdAndUpdate(id, { email: email }, err => { // update the user's email
                             if (err) return res.send(500, err);
                             user.email = email;
                             res.redirect('/my-account');
@@ -187,7 +183,7 @@ router.post('/delete',(req,res)=>{
         
         } else { // delete Account
             const id = req.user._id;
-            dbUser.findByIdAndDelete(id, err => { // update the user's email
+            User.findByIdAndDelete(id, err => { // update the user's email
                 if (err) return res.send(500, err);
                 req.logout();
                 req.flash('success_msg','Your Account has been deleted');
@@ -218,25 +214,39 @@ router.post('/login',(req,res,next)=>{
 router.post('/addWishlist/:_id',(req,res)=>{
     const id = req.params._id;
     let userId = req.user._id;
+    let newWishlist = [id];
 
-    // Product.findOne({_id : id}).exec((err,product)=>{
-        let newWishlist = [id];
+    User.findOne({_id : userId}).exec((err,user)=>{
 
-        User.findOne({_id : userId}).exec((err,user)=>{
-
-            if (user.wishlist) {
-                user.wishlist.forEach(elem => {
-                    newWishlist.push(elem)    
-                });
-            }
-    
-            dbUser.findByIdAndUpdate(userId, { wishlist: newWishlist }, err => { // update the wishlist
-                if (err) return res.send(500, err);
-                req.user.wishlist = newWishlist;
-                res.redirect('/shop');
+        if (user.wishlist) { // saving products already in the wishlist
+            user.wishlist.forEach(elem => {
+                newWishlist.push(elem)    
             });
+        }
+
+        User.findByIdAndUpdate(userId, { wishlist: newWishlist }, err => { // update the wishlist
+            if (err) return res.send(500, err);
+            req.user.wishlist = newWishlist;
+            res.redirect('/shop');
         });
-    // });
+    });
 });
 
+//remove from the wishlist
+router.post('/removeWishlist/:_id',(req,res)=>{
+    const id = req.params._id;
+    const user = req.user;
+
+    User.findOne({_id : user._id}).exec((err,user)=>{
+        let wishlist = user.wishlist;
+        let newWishlist = wishlist.filter(elem => elem != id);
+
+        User.findByIdAndUpdate(user._id, { wishlist: newWishlist }, err => { // update the wishlist
+            if (err) return res.send(500, err);
+            req.user.wishlist = newWishlist;
+            res.redirect('/users/wishlist');
+        });
+    });
+
+});
 module.exports  = router;
