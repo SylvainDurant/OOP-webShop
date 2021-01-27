@@ -218,6 +218,11 @@ router.post('/addWishlist/:_id',(req,res)=>{
 
     User.findOne({_id : userId}).exec((err,user)=>{
 
+        if (user.wishlist.includes(id)){
+            req.flash('error_msg','This product is already in your wishlist');
+            return res.redirect('/shop')
+        };
+
         if (user.wishlist) { // saving products already in the wishlist
             user.wishlist.forEach(elem => {
                 newWishlist.push(elem)    
