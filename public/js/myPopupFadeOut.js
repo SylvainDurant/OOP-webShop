@@ -1,5 +1,4 @@
 function fadeOutEffect() {
-	console.log('start');
     let fadeTarget = document.getElementById("PopupMessages");
     let fadeEffect = setInterval(function () {
         if (!fadeTarget.style.opacity) {
@@ -13,6 +12,8 @@ function fadeOutEffect() {
     }, 100);
 }
 
-setTimeout(function(){
-    fadeOutEffect(); 
-}, 3000);
+if (target != null) {
+    setTimeout(function(){
+        fadeOutEffect(); 
+    }, 3000);
+}
