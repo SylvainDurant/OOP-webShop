@@ -282,7 +282,8 @@ router.post('/addCart/:_id',(req,res)=>{
             });
         });
     } else {
-        let cart = new Cart(newCart);
+        let cart = new Cart;
+        cart.items.push(newCart);
         req.cart = cart;
         req.flash('success_msg','Product added to your cart');
         res.redirect('/shop');
