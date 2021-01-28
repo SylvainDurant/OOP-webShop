@@ -41,9 +41,10 @@ const UserSchema  = new mongoose.Schema({
         type : Date
     },
 
-    cart :{
-        type : Object
-    },
+    cart :[{
+        type: Schema.Types.ObjectId,
+        ref: "Product"
+    }],
 
     wishlist :[{
         type: Schema.Types.ObjectId,

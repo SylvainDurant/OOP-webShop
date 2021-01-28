@@ -15,6 +15,7 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbar-menu">
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp"> 
+                        <% if(typeof page === 'undefined') {page = ''}; %>
                         <li class="nav-item <% if (page === 'home') {%>active<%} else {%>''<% } %>"><a class="nav-link" href="/">Home</a></li>
                         <li class="nav-item <% if (page === 'about') {%>active<%} else {%>''<% } %>"><a class="nav-link" href="/about">About Us</a></li>
                         <li class="dropdown <% if (page === 'shop') {%>active<%} else {%>''<% } %>">
@@ -47,8 +48,11 @@
 						</li>
                     </ul>
                 </div>
-                <!-- End Atribute Navigation -->
             </div>
+            <!-- End Atribute Navigation -->
+            
+            <%- include ('./PopupMessages') %>
+
             <!-- Start Side Menu -->
             <div class="side">
                 <a href="#" class="close-side"><i class="fa fa-times"></i></a>

@@ -1,0 +1,17 @@
+<% if(success_msg != '') { %>
+    <div id="PopupMessages" class="alert alert-success alert-dismissible fade show myMessageBox" role="alert">
+        <p><%=success_msg %></p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<% } %>
+
+<% if(error_msg != '') { %> 
+    <div id="PopupMessages" class="alert alert-danger alert-dismissible fade show myMessageBox" role="alert">
+        <p><%= error_msg %></p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<% } %>

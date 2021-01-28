@@ -28,3 +28,13 @@
     font-weight: 700;
     text-transform: uppercase;
 }
+
+.myMessageBox{
+    border: solid 2px;
+    max-width: 300px;
+    position: absolute;
+    z-index: 100;
+    left: 45%;
+    top: -10px;
+    opacity: 0.95;
+}

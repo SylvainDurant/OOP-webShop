@@ -4,10 +4,10 @@ const {ensureAuthenticated} = require("../config/403.js");
 const User = require("../models/user.js");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const dbUser = require("../models/user");
-const user = require('../models/user.js');
+// const user = require('../models/user.js');
 const bcrypt = require('bcrypt');
 const Product = require("../models/product");
+const Cart = require("../models/cart");
 
 ///// GET Path /////
 //index page
@@ -73,7 +73,8 @@ router.get('/shop', (req,res)=>{
         res.render('shop',{
             products: products,
             user: req.user,
-            page: 'shop'
+            page: 'shop',
+            cart: req.cart
         });
     });
 })
@@ -190,7 +191,7 @@ router.post('/password',(req,res)=>{
                     // });
 
                     const id = user._id;
-                    dbUser.findByIdAndUpdate(id, { resetPasswordToken: token, resetPasswordExpires: expire}, err => { // add token to the user
+                    User.findByIdAndUpdate(id, { resetPasswordToken: token, resetPasswordExpires: expire}, err => { // add token to the user
                         if (err) return res.send(500, err);
 
                         success_msg.push('An e-mail has been sent to "'+email+'" with the confirmation link. Please, confirm password reset.')
@@ -240,7 +241,7 @@ router.post('/resetPassword/:token',(req,res)=>{
         User.findOne({resetPasswordToken : token}).exec((err,result)=>{
             const id = result._id;
 
-            dbUser.findByIdAndUpdate(id, { password: hashedPassword }, err => { // change the user's password
+            User.findByIdAndUpdate(id, { password: hashedPassword }, err => { // change the user's password
                 if (err) return res.send(500, err);
                 user.password = hashedPassword;
                 req.flash('success_msg','Your password has been reset.')
@@ -248,6 +249,44 @@ router.post('/resetPassword/:token',(req,res)=>{
             });
         });
     }));
+});
+
+///// ***** CART ***** //////
+
+// Add to cart
+router.post('/addCart/:_id',(req,res)=>{
+    const id = req.params._id;
+    let newCart = [id];
+
+    if (typeof req.user != 'undefined') { // if the user is logged in
+        let userId = req.user._id;
+
+        User.findOne({_id : userId}).exec((err,user)=>{
+
+            if (user.cart.includes(id)){
+                req.flash('error_msg','This product is already in your cart');
+                return res.redirect('/shop')
+            };
+
+            if (user.cart) { // saving products already in the cart
+                user.cart.forEach(elem => {
+                    newCart.push(elem)    
+                });
+            }
+
+            User.findByIdAndUpdate(userId, { cart: newCart }, err => { // update the cart
+                if (err) return res.send(500, err);
+                req.user.cart = newCart;
+                req.flash('success_msg','Product added to your cart');
+                res.redirect('/shop');
+            });
+        });
+    } else {
+        let cart = new Cart(newCart);
+        req.cart = cart;
+        req.flash('success_msg','Product added to your cart');
+        res.redirect('/shop');
+    }
 });
 
 module.exports = router; 
