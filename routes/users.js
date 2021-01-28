@@ -208,6 +208,8 @@ router.post('/login',(req,res,next)=>{
         failureRedirect : '/users/login',
         failureFlash : true,
     })(req,res,next);
+
+    // req.flash('success_msg','You are logged in');
 })
 
 //add to wishlist
@@ -232,6 +234,7 @@ router.post('/addWishlist/:_id',(req,res)=>{
         User.findByIdAndUpdate(userId, { wishlist: newWishlist }, err => { // update the wishlist
             if (err) return res.send(500, err);
             req.user.wishlist = newWishlist;
+            req.flash('success_msg','Product added to your wishlist');
             res.redirect('/shop');
         });
     });

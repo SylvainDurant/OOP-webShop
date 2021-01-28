@@ -60,8 +60,15 @@
 
                     <div class="add-to-btn">
                         <div class="add-comp">
-                            <a class="btn hvr-hover" href="#"><i class="fas fa-heart"></i> Add to wishlist</a>
-                            <a class="btn hvr-hover" href="#"><i class="fas fa-sync-alt"></i> Add to Compare</a>
+
+                            <form action="/users/addWishlist/<%= product._id %>" method="post">
+                                <a class="btn hvr-hover" <% if (typeof user != 'undefined'){%>href="#" onclick="this.closest('form').submit();return false;"<%}%> data-toggle="tooltip" data-placement="left" title="<% if (typeof user === 'undefined'){%>You must be Sign in to add this product to your wishlist.<%}else{%>Add to Wishlist<%}%>">
+                                    <i class="far fa-heart"></i>
+                                     Add to wishlist
+                                </a>
+                                <a class="btn hvr-hover" href="#"><i class="fas fa-sync-alt"></i> Add to Compare</a>
+                            </form>
+                            
                         </div>
                         <div class="share-bar">
                             <a class="btn hvr-hover" href="#"><i class="fab fa-facebook" aria-hidden="true"></i></a>
